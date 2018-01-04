@@ -10,6 +10,7 @@
 #include <QString>
 #include <QLabel>
 #include <QScrollArea>
+#include <cmath>
 
 namespace Ui {
 class Notepad;
@@ -61,6 +62,36 @@ private slots:
 
     void on_actionCrop_triggered();
 
+    void on_actionOpen_Second_triggered();
+
+    void on_actionAdd_triggered();
+
+    void on_actionSubtract_triggered();
+
+    void on_actionMultiply_triggered();
+
+    void on_actionNearest_triggered();
+
+    void on_actionBilinear_triggered();
+
+    void on_actionNearest_2_triggered();
+
+    void on_actionBilinear_2_triggered();
+
+    void on_actionHistogram_triggered();
+
+    void on_actionNormal_Linear_triggered();
+
+    void on_actionPiecewise_Linear_triggered();
+
+    void on_actionLogarithm_triggered();
+
+    void on_actionExponent_triggered();
+
+    void on_actionEqualization_triggered();
+
+    void on_actionMean_triggered();
+
 private:
     Ui::Notepad *ui;
     QString currentFile;
@@ -73,6 +104,7 @@ private:
 
     int min = 0, max = 0;
     QPoint mouse_begin, mouse_end;
+
 };
 
 #endif // NOTEPAD_H

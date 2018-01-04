@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1600</width>
-    <height>900</height>
+    <width>1920</width>
+    <height>1080</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QScrollArea" name="scrollArea">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>30</y>
-      <width>1000</width>
-      <height>800</height>
+      <x>10</x>
+      <y>150</y>
+      <width>941</width>
+      <height>831</height>
      </rect>
     </property>
     <property name="widgetResizable">
@@ -31,8 +31,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>998</width>
-       <height>798</height>
+       <width>939</width>
+       <height>829</height>
       </rect>
      </property>
     </widget>
@@ -40,9 +40,9 @@
    <widget class="QTextEdit" name="hueText">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>30</y>
-      <width>201</width>
+      <x>220</x>
+      <y>10</y>
+      <width>41</width>
       <height>31</height>
      </rect>
     </property>
@@ -51,7 +51,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>10</y>
       <width>201</width>
       <height>31</height>
      </rect>
@@ -65,7 +65,7 @@
      <rect>
       <x>150</x>
       <y>90</y>
-      <width>311</width>
+      <width>291</width>
       <height>22</height>
      </rect>
     </property>
@@ -78,7 +78,7 @@
      <rect>
       <x>150</x>
       <y>120</y>
-      <width>311</width>
+      <width>291</width>
       <height>22</height>
      </rect>
     </property>
@@ -99,13 +99,354 @@
      <string>Double Threshold</string>
     </property>
    </widget>
+   <widget class="QScrollArea" name="scrollArea_2">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>150</y>
+      <width>941</width>
+      <height>831</height>
+     </rect>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>939</width>
+       <height>829</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="scaleLabel">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>10</y>
+      <width>41</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Scale</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="scaleText">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>10</y>
+      <width>41</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="rotateLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Rotate</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="rotateAnglelabel">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>50</y>
+      <width>41</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Angle</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="rotateAngleText">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>50</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="rotateXText">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>50</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="rotateYText">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>50</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="rotateXLabel">
+    <property name="geometry">
+     <rect>
+      <x>211</x>
+      <y>50</y>
+      <width>20</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>x</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="rotateYLabel">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>50</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>y</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="piecewiseLinearlabel">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>60</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Piecewise linear</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="gxylabel">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>20</y>
+      <width>72</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>g(x,y)</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="fxyLabel">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>100</y>
+      <width>72</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>f(x,y)</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="cText">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>10</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="aText">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>90</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="bText">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>90</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="dText">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>10</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logarithmLabel">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>10</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Logarithm/Exponent</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logarithmALabel">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>60</y>
+      <width>16</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>a</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logarithmBLabel">
+    <property name="geometry">
+     <rect>
+      <x>860</x>
+      <y>60</y>
+      <width>16</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>b</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logarithmCLabel">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>60</y>
+      <width>16</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>c</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="logarithmAText">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>60</y>
+      <width>61</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="logarithmBText">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>60</y>
+      <width>61</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="logarithmCText">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>60</y>
+      <width>61</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>0</y>
+      <width>151</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="kernel">
+     <item row="2" column="0">
+      <widget class="QTextEdit" name="kernelText21"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QTextEdit" name="kernelText31"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QTextEdit" name="kernelText13"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QTextEdit" name="kernelText12"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QTextEdit" name="kernelText32"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QTextEdit" name="kernelText23"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QTextEdit" name="kernelText33"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QTextEdit" name="kernelText11"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QTextEdit" name="kernelText22"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="kernelLabel">
+    <property name="geometry">
+     <rect>
+      <x>1030</x>
+      <y>60</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Kernel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1600</width>
+     <width>1920</width>
      <height>26</height>
     </rect>
    </property>
@@ -116,6 +457,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
+    <addaction name="actionOpen_Second"/>
    </widget>
    <widget class="QMenu" name="menuBasic">
     <property name="title">
@@ -146,15 +488,65 @@
     <property name="title">
      <string>Algebra Geometry</string>
     </property>
+    <widget class="QMenu" name="menuScale">
+     <property name="title">
+      <string>Scale</string>
+     </property>
+     <addaction name="actionNearest"/>
+     <addaction name="actionBilinear"/>
+    </widget>
+    <widget class="QMenu" name="menuRotate">
+     <property name="title">
+      <string>Rotate</string>
+     </property>
+     <addaction name="actionNearest_2"/>
+     <addaction name="actionBilinear_2"/>
+    </widget>
     <addaction name="actionAdd"/>
     <addaction name="actionSubtract"/>
     <addaction name="actionMultiply"/>
     <addaction name="actionCrop"/>
+    <addaction name="menuScale"/>
+    <addaction name="menuRotate"/>
+   </widget>
+   <widget class="QMenu" name="menuContrast">
+    <property name="title">
+     <string>Contrast</string>
+    </property>
+    <widget class="QMenu" name="menuLinear">
+     <property name="title">
+      <string>Linear</string>
+     </property>
+     <addaction name="actionNormal_Linear"/>
+     <addaction name="actionPiecewise_Linear"/>
+    </widget>
+    <widget class="QMenu" name="menuNonlinear">
+     <property name="title">
+      <string>Nonlinear</string>
+     </property>
+     <addaction name="actionLogarithm"/>
+     <addaction name="actionExponent"/>
+    </widget>
+    <addaction name="menuLinear"/>
+    <addaction name="menuNonlinear"/>
+    <addaction name="actionHistogram"/>
+    <addaction name="actionEqualization"/>
+   </widget>
+   <widget class="QMenu" name="menuSmooth">
+    <property name="title">
+     <string>Smooth</string>
+    </property>
+    <addaction name="actionMean"/>
+    <addaction name="actionMedian"/>
+    <addaction name="actionGauss"/>
+    <addaction name="actionCustom_Kernel"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuBasic"/>
    <addaction name="menuBinarization"/>
    <addaction name="menuAlgebra_Geometry"/>
+   <addaction name="menuContrast"/>
+   <addaction name="menuSmooth"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -243,6 +635,81 @@
   <action name="actionCrop">
    <property name="text">
     <string>Crop</string>
+   </property>
+  </action>
+  <action name="actionOpen_Second">
+   <property name="text">
+    <string>Open Second</string>
+   </property>
+  </action>
+  <action name="actionNearest">
+   <property name="text">
+    <string>Nearest</string>
+   </property>
+  </action>
+  <action name="actionBilinear">
+   <property name="text">
+    <string>Bilinear</string>
+   </property>
+  </action>
+  <action name="actionNearest_2">
+   <property name="text">
+    <string>Nearest</string>
+   </property>
+  </action>
+  <action name="actionBilinear_2">
+   <property name="text">
+    <string>Bilinear</string>
+   </property>
+  </action>
+  <action name="actionNormal_Linear">
+   <property name="text">
+    <string>Normal Linear</string>
+   </property>
+  </action>
+  <action name="actionPiecewise_Linear">
+   <property name="text">
+    <string>Piecewise Linear</string>
+   </property>
+  </action>
+  <action name="actionLogarithm">
+   <property name="text">
+    <string>Logarithm</string>
+   </property>
+  </action>
+  <action name="actionExponent">
+   <property name="text">
+    <string>Exponent</string>
+   </property>
+  </action>
+  <action name="actionHistogram">
+   <property name="text">
+    <string>Histogram</string>
+   </property>
+  </action>
+  <action name="actionEqualization">
+   <property name="text">
+    <string>Equalization</string>
+   </property>
+  </action>
+  <action name="actionMean">
+   <property name="text">
+    <string>Mean</string>
+   </property>
+  </action>
+  <action name="actionMedian">
+   <property name="text">
+    <string>Median</string>
+   </property>
+  </action>
+  <action name="actionGauss">
+   <property name="text">
+    <string>Gauss</string>
+   </property>
+  </action>
+  <action name="actionCustom_Kernel">
+   <property name="text">
+    <string>Custom Kernel</string>
    </property>
   </action>
  </widget>

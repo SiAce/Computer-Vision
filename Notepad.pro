@@ -26,13 +26,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        notepad.cpp
+        notepad.cpp \
+    histogram.cpp
 
 HEADERS += \
-        notepad.h
+        notepad.h \
+    histogram.h
 
 FORMS += \
-        notepad.ui
+        notepad.ui \
+    histogram.ui
 
 RESOURCES += \
     iris.qrc
