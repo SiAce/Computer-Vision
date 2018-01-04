@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
+QT += widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -32,3 +33,6 @@ HEADERS += \
 
 FORMS += \
         notepad.ui
+
+RESOURCES += \
+    iris.qrc
