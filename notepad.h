@@ -11,6 +11,8 @@
 #include <QLabel>
 #include <QScrollArea>
 #include <cmath>
+#include <algorithm>
+#include <array>
 
 namespace Ui {
 class Notepad;
@@ -91,6 +93,12 @@ private slots:
     void on_actionEqualization_triggered();
 
     void on_actionMean_triggered();
+
+    void on_actionMedian_triggered();
+
+    void on_actionGauss_triggered();
+
+    void on_actionCustom_Kernel_triggered();
 
 private:
     Ui::Notepad *ui;
