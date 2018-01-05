@@ -13,6 +13,7 @@
 #include <cmath>
 #include <algorithm>
 #include <array>
+#define PI 3.14159265
 
 namespace Ui {
 class Notepad;
@@ -99,6 +100,12 @@ private slots:
     void on_actionGauss_triggered();
 
     void on_actionCustom_Kernel_triggered();
+
+    void on_actionSobel_triggered();
+
+    void on_actionLaplace_triggered();
+
+    void on_actionCanny_triggered();
 
 private:
     Ui::Notepad *ui;

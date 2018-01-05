@@ -1006,7 +1006,7 @@ void Notepad::on_actionCustom_Kernel_triggered()
     double c32 = ui->kernelText32->toPlainText().toDouble();
     double c33 = ui->kernelText33->toPlainText().toDouble();
 
-    double total = c11 + c12 + c13 + c21 + c22 + c23 + c31 + c32 + c33;
+    double total = fabs(c11) + fabs(c12) + fabs(c13) + fabs(c21) + fabs(c22) + fabs(c23) + fabs(c31) + fabs(c32) + fabs(c33);
     int width = image->width();
     int height = image->height();
     QImage * newImage = new QImage(width, height, QImage::Format_ARGB32);
@@ -1044,4 +1044,291 @@ void Notepad::on_actionCustom_Kernel_triggered()
     *image = *newImage;
     imageLabel->setPixmap(QPixmap::fromImage(*image));
     delete newImage;
+}
+
+void Notepad::on_actionSobel_triggered()
+{
+    int width = image->width();
+    int height = image->height();
+    QImage * newImage = new QImage(width, height, QImage::Format_ARGB32);
+
+    QRgb rgb11, rgb12, rgb13, rgb21, rgb22, rgb23, rgb31, rgb32, rgb33;
+
+    for(int i = 1; i < (width - 1); i++)
+    {
+        for(int j = 1; j < (height - 1); j++)
+        {
+            rgb11 = image->pixel(i - 1, j - 1);
+            rgb12 = image->pixel(i, j - 1);
+            rgb13 = image->pixel(i + 1, j - 1);
+            rgb21 = image->pixel(i - 1, j);
+            rgb22 = image->pixel(i, j);
+            rgb23 = image->pixel(i + 1, j);
+            rgb31 = image->pixel(i - 1, j + 1);
+            rgb32 = image->pixel(i, j + 1);
+            rgb33 = image->pixel(i + 1, j + 1);
+
+            int red_gx = ((-1)*qRed(rgb11) + 1*qRed(rgb13) +
+                       (-2)*qRed(rgb21) +  2*qRed(rgb23) +
+                       (-1)*qRed(rgb31) +  1*qRed(rgb33));
+            int red_gy = ((-1)*qRed(rgb11) + (-2)*qRed(rgb12) + (-1)*qRed(rgb13) +
+                         1*qRed(rgb31) + 2*qRed(rgb32) + 1*qRed(rgb33));
+            int red = sqrt(red_gx*red_gx + red_gy*red_gy);
+
+            int green_gx = ((-1)*qGreen(rgb11) + 1*qGreen(rgb13) +
+                       (-2)*qGreen(rgb21) +  2*qGreen(rgb23) +
+                       (-1)*qGreen(rgb31) +  1*qGreen(rgb33));
+            int green_gy = ((-1)*qGreen(rgb11) + (-2)*qGreen(rgb12) + (-1)*qGreen(rgb13) +
+                         1*qGreen(rgb31) + 2*qGreen(rgb32) + 1*qGreen(rgb33));
+            int green = sqrt(green_gx*green_gx + green_gy*green_gy);
+
+            int blue_gx = ((-1)*qBlue(rgb11) + 1*qBlue(rgb13) +
+                       (-2)*qBlue(rgb21) +  2*qBlue(rgb23) +
+                       (-1)*qBlue(rgb31) +  1*qBlue(rgb33));
+            int blue_gy = ((-1)*qBlue(rgb11) + (-2)*qBlue(rgb12) + (-1)*qBlue(rgb13) +
+                         1*qBlue(rgb31) + 2*qBlue(rgb32) + 1*qBlue(rgb33));
+            int blue = sqrt(blue_gx*blue_gx + blue_gy*blue_gy);
+
+            newImage->setPixel(i, j, qRgb(red, green, blue));
+        }
+    }
+
+    *image = *newImage;
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+    delete newImage;
+}
+
+void Notepad::on_actionLaplace_triggered()
+{
+    int width = image->width();
+    int height = image->height();
+
+    QImage * newImage = new QImage(width, height, QImage::Format_ARGB32);
+
+    QRgb rgb11, rgb12, rgb13, rgb21, rgb22, rgb23, rgb31, rgb32, rgb33;
+
+    for(int i = 1; i < (width - 1); i++)
+    {
+        for(int j = 1; j < (height - 1); j++)
+        {
+            rgb11 = image->pixel(i - 1, j - 1);
+            rgb12 = image->pixel(i, j - 1);
+            rgb13 = image->pixel(i + 1, j - 1);
+            rgb21 = image->pixel(i - 1, j);
+            rgb22 = image->pixel(i, j);
+            rgb23 = image->pixel(i + 1, j);
+            rgb31 = image->pixel(i - 1, j + 1);
+            rgb32 = image->pixel(i, j + 1);
+            rgb33 = image->pixel(i + 1, j + 1);
+
+            int red = ((-1)*qRed(rgb11) + (-1)*qRed(rgb12) + (-1)*qRed(rgb13) +
+                       (-1)*qRed(rgb21) + 8*qRed(rgb22) + (-1)*qRed(rgb23) +
+                       (-1)*qRed(rgb31) + (-1)*qRed(rgb32) + (-1)*qRed(rgb33)) / 16;
+            int green = ((-1)*qGreen(rgb11) + (-1)*qGreen(rgb12) + (-1)*qGreen(rgb13) +
+                         (-1)*qGreen(rgb21) + 8*qGreen(rgb22) + (-1)*qGreen(rgb23) +
+                         (-1)*qGreen(rgb31) + (-1)*qGreen(rgb32) + (-1)*qGreen(rgb33)) / 16;
+            int blue = ((-1)*qBlue(rgb11) + (-1)*qBlue(rgb12) + (-1)*qBlue(rgb13) +
+                        (-1)*qBlue(rgb21) + 8*qBlue(rgb22) + (-1)*qBlue(rgb23) +
+                        (-1)*qBlue(rgb31) + (-1)*qBlue(rgb32) + (-1)*qBlue(rgb33)) / 16;
+
+            newImage->setPixel(i, j, qRgb(red, green, blue));
+        }
+    }
+
+    *image = *newImage;
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+    delete newImage;
+}
+
+void Notepad::on_actionCanny_triggered()
+{
+    on_actionGauss_triggered();
+
+    int width = image->width();
+    int height = image->height();
+
+    int ** angle = new int*[width];
+    for(int i = 0; i < width; i++)
+    {
+        angle[i] = new int[height];
+    }
+
+    QImage * newImage = new QImage(width, height, QImage::Format_ARGB32);
+
+    QRgb rgb11, rgb12, rgb13, rgb21, rgb22, rgb23, rgb31, rgb32, rgb33;
+
+    for(int i = 1; i < (width - 1); i++)
+    {
+        for(int j = 1; j < (height - 1); j++)
+        {
+            rgb11 = image->pixel(i - 1, j - 1);
+            rgb12 = image->pixel(i, j - 1);
+            rgb13 = image->pixel(i + 1, j - 1);
+            rgb21 = image->pixel(i - 1, j);
+            rgb22 = image->pixel(i, j);
+            rgb23 = image->pixel(i + 1, j);
+            rgb31 = image->pixel(i - 1, j + 1);
+            rgb32 = image->pixel(i, j + 1);
+            rgb33 = image->pixel(i + 1, j + 1);
+
+            int red_gx = ((-1)*qRed(rgb11) + 1*qRed(rgb13) +
+                       (-2)*qRed(rgb21) +  2*qRed(rgb23) +
+                       (-1)*qRed(rgb31) +  1*qRed(rgb33));
+            int red_gy = ((-1)*qRed(rgb11) + (-2)*qRed(rgb12) + (-1)*qRed(rgb13) +
+                         1*qRed(rgb31) + 2*qRed(rgb32) + 1*qRed(rgb33));
+            int red = sqrt(red_gx*red_gx + red_gy*red_gy);
+
+            int green_gx = ((-1)*qGreen(rgb11) + 1*qGreen(rgb13) +
+                       (-2)*qGreen(rgb21) +  2*qGreen(rgb23) +
+                       (-1)*qGreen(rgb31) +  1*qGreen(rgb33));
+            int green_gy = ((-1)*qGreen(rgb11) + (-2)*qGreen(rgb12) + (-1)*qGreen(rgb13) +
+                         1*qGreen(rgb31) + 2*qGreen(rgb32) + 1*qGreen(rgb33));
+            int green = sqrt(green_gx*green_gx + green_gy*green_gy);
+
+            int blue_gx = ((-1)*qBlue(rgb11) + 1*qBlue(rgb13) +
+                       (-2)*qBlue(rgb21) +  2*qBlue(rgb23) +
+                       (-1)*qBlue(rgb31) +  1*qBlue(rgb33));
+            int blue_gy = ((-1)*qBlue(rgb11) + (-2)*qBlue(rgb12) + (-1)*qBlue(rgb13) +
+                         1*qBlue(rgb31) + 2*qBlue(rgb32) + 1*qBlue(rgb33));
+            int blue = sqrt(blue_gx*blue_gx + blue_gy*blue_gy);
+
+            angle[i][j] = atan(fabs(red_gy + green_gy + blue_gy) / fabs(red_gx + green_gx + blue_gx)) * 180 / PI;
+
+            newImage->setPixel(i, j, qRgb(red, green, blue));
+        }
+    }
+
+    width = width - 2;
+    height = height - 2;
+
+    *image = *newImage;
+
+    for(int i = 1; i < (width - 1); i++)
+    {
+        for(int j = 1; j < (height - 1); j++)
+        {
+            rgb11 = image->pixel(i - 1, j - 1);
+            rgb12 = image->pixel(i, j - 1);
+            rgb13 = image->pixel(i + 1, j - 1);
+            rgb21 = image->pixel(i - 1, j);
+            rgb22 = image->pixel(i, j);
+            rgb23 = image->pixel(i + 1, j);
+            rgb31 = image->pixel(i - 1, j + 1);
+            rgb32 = image->pixel(i, j + 1);
+            rgb33 = image->pixel(i + 1, j + 1);
+
+            int current_angle = angle[i][j];
+
+            if ((current_angle >= 0 && current_angle < 23) || (current_angle >= 158 && current_angle < 180))
+            {
+                if(qRed(rgb22) < qRed(rgb21) || qRed(rgb22) < qRed(rgb23))
+                {
+                    rgb22 = qRgb(0, 0, 0);
+                }
+
+            } else if (current_angle >= 23 && current_angle < 68) {
+                if(qRed(rgb22) < qRed(rgb13) || qRed(rgb22) < qRed(rgb31))
+                {
+                    rgb22 = qRgb(0, 0, 0);
+                }
+
+            } else if (current_angle >= 68 && current_angle < 113 ) {
+                if(qRed(rgb22) < qRed(rgb12) || qRed(rgb22) < qRed(rgb32))
+                {
+                    rgb22 = qRgb(0, 0, 0);
+                }
+
+            } else if (current_angle >= 113 && current_angle < 158) {
+                if(qRed(rgb22) < qRed(rgb11) || qRed(rgb22) < qRed(rgb33))
+                {
+                    rgb22 = qRgb(0, 0, 0);
+                }
+            }
+
+            newImage->setPixel(i, j, rgb22);
+        }
+    }
+
+    *image = *newImage;
+
+//    width = width - 2;
+//    height = height - 2;
+
+//    QRgb * line;
+//    int total_pixels = 0;
+//    int greylevel[256] = {0};
+//    double probabilities[256] = {0};
+//    double w0 = 0, w1 = 0, u0 = 0, u1 = 0, last_sigma2 = 0,sigma2 = 0;
+//    int t = 0, final_t = 0 , min = 0;
+
+//    for(int y = 0; y<height; y++){
+//        line = (QRgb *)image->scanLine(y);
+
+//        for(int x = 0; x<width; x++){
+//            int average = (qRed(line[x]) + qGreen(line[x]) + qRed(line[x]))/3;
+//            total_pixels++;
+//            greylevel[average]++;
+//        }
+
+//    }
+
+//    for(int x = 0; x<256; x++)
+//    {
+//        probabilities[x] = double(greylevel[x]) / total_pixels;
+//    }
+
+//    for(t = 1; t<256; t++)
+//    {
+//        w0 = 0, w1 = 0, u0 = 0, u1 = 0;
+//        for(int x = 0; x<t; x++)
+//        {
+//            w0 = w0 + probabilities[x];
+//        }
+//        for(int x = t; x<256; x++)
+//        {
+//            w1 = w1 + probabilities[x];
+//        }
+//        for(int x = 0; x<t; x++)
+//        {
+//            u0 = u0 + x*probabilities[x]/w0;
+//        }
+//        for(int x = t; x<256; x++)
+//        {
+//            u1 = u1 + x*probabilities[x]/w1;
+//        }
+//        sigma2 = w0*w1*((u0 - u1)*(u0 - u1));
+//        if (sigma2 > last_sigma2)
+//        {
+//            final_t = t;
+//        }
+//        last_sigma2 = sigma2;
+//    }
+
+//    min = final_t / 2;
+
+//    for(int y = 0; y<height; y++){
+//        line = (QRgb *)image->scanLine(y);
+
+//        for(int x = 0; x<width; x++){
+//            int average = (qRed(line[x]) + qGreen(line[x]) + qRed(line[x]))/3;
+//            if (average >= min && average <= final_t)
+//            {
+//                newImage->setPixel(x, y, line[x]);
+//            } else {
+//                newImage->setPixel(x, y, qRgb(0, 0, 0));
+//            }
+
+//        }
+
+//    }
+
+//    *image = *newImage;
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+    delete newImage;
+
+    for(int i = 0; i < width; i++)
+    {
+        delete angle[i];
+    }
+    delete angle;
 }

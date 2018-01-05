@@ -577,12 +577,21 @@
     <addaction name="actionGauss"/>
     <addaction name="actionCustom_Kernel"/>
    </widget>
+   <widget class="QMenu" name="menuEdge_Detection">
+    <property name="title">
+     <string>Edge Detection</string>
+    </property>
+    <addaction name="actionSobel"/>
+    <addaction name="actionLaplace"/>
+    <addaction name="actionCanny"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuBasic"/>
    <addaction name="menuBinarization"/>
    <addaction name="menuAlgebra_Geometry"/>
    <addaction name="menuContrast"/>
    <addaction name="menuSmooth"/>
+   <addaction name="menuEdge_Detection"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -746,6 +755,21 @@
   <action name="actionCustom_Kernel">
    <property name="text">
     <string>Custom Kernel</string>
+   </property>
+  </action>
+  <action name="actionSobel">
+   <property name="text">
+    <string>Sobel</string>
+   </property>
+  </action>
+  <action name="actionLaplace">
+   <property name="text">
+    <string>Laplace</string>
+   </property>
+  </action>
+  <action name="actionCanny">
+   <property name="text">
+    <string>Canny</string>
    </property>
   </action>
  </widget>
