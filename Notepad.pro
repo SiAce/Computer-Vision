@@ -38,4 +38,3 @@ FORMS += \
     histogram.ui
 
 RESOURCES += \
-    iris.qrc

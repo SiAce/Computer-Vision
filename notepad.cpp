@@ -19,6 +19,7 @@ Notepad::Notepad(QWidget *parent) :
 
     imageLabel = new QLabel;
     imageLabel->setAlignment(Qt::AlignTop);
+    imageLabel->setMouseTracking(true);
     ui->scrollArea->setBackgroundRole(QPalette::Dark);
     ui->scrollArea->setWidget(imageLabel);
 
@@ -74,7 +75,7 @@ void Notepad::changeMin(int value)
 
         for(int x = 0; x<newImage->width(); x++){
             int average = (qRed(line[x]) + qGreen(line[x]) + qRed(line[x]))/3;
-            if (average > min && average <= max)
+            if (average >= min && average < max)
             {
                 newImage->setPixel(x,y, qRgb(255, 255, 255));
             } else {
@@ -102,7 +103,7 @@ void Notepad::changeMax(int value)
 
         for(int x = 0; x<newImage->width(); x++){
             int average = (qRed(line[x]) + qGreen(line[x]) + qRed(line[x]))/3;
-            if (average > min && average <= max)
+            if (average >= min && average < max)
             {
                 newImage->setPixel(x,y, qRgb(255, 255, 255));
             } else {
