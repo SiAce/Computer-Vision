@@ -30,6 +30,8 @@ public:
 public slots:
     void changeMin(int value);
     void changeMax(int value);
+    void changeLevelMin(int value);
+    void changeLevelMax(int value);
 
 private slots:
 
@@ -107,6 +109,38 @@ private slots:
 
     void on_actionCanny_triggered();
 
+    void on_actionDilation_triggered();
+
+    void on_actionErosion_triggered();
+
+    void on_actionOpening_triggered();
+
+    void on_actionClosing_triggered();
+
+    void on_actionDistance_Transform_triggered();
+
+    void on_actionHit_or_Miss_triggered();
+
+    void on_actionThinning_triggered();
+
+    void on_actionThickening_triggered();
+
+    void on_actionSkeleton_triggered();
+
+    void on_actionReconstruction_triggered();
+
+    void on_actionDilation_2_triggered();
+
+    void on_actionErosion_2_triggered();
+
+    void on_actionOpening_2_triggered();
+
+    void on_actionClosing_2_triggered();
+
+    void on_actionReconstruction_2_triggered();
+
+    void on_actionLevel_triggered();
+
 private:
     Ui::Notepad *ui;
     QString currentFile;
@@ -120,6 +154,16 @@ private:
     int min = 0, max = 0;
     QPoint mouse_begin, mouse_end;
 
+    QImage Subtract(QImage input_image_1, QImage input_image_2);
+    QImage Dilation(QImage input_image);
+    QImage Erosion(QImage input_image);
+    QImage Opening(QImage input_image);
+    QImage Complement(QImage input_image);
+    QImage Intersection(QImage input_image_1, QImage input_image_2);
+    QImage Union(QImage input_image_1, QImage input_image_2);
+    QImage HitOrMiss(QImage input_image);
+
+    QImage GrayDilation(QImage input_image);
 };
 
 #endif // NOTEPAD_H

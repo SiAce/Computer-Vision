@@ -44,6 +44,371 @@ Notepad::~Notepad()
     delete ui;
 }
 
+QImage Notepad::Subtract(QImage input_image_1, QImage input_image_2)
+{
+    int width = (input_image_1.width()<input_image_2.width())?input_image_1.width():input_image_2.width();
+    int height = (input_image_1.height()<input_image_2.height())?input_image_1.height():input_image_2.height();
+    QImage new_image(width, height, QImage::Format_ARGB32);
+
+    QRgb rgb, rgb_2;
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            rgb = input_image_1.pixel(i, j);
+            rgb_2 = input_image_2.pixel(i,j);
+            int red = (qRed(rgb) - qRed(rgb_2) > 0)? (qRed(rgb) - qRed(rgb_2)): 0;
+            int green = (qGreen(rgb) - qGreen(rgb_2) > 0)? (qGreen(rgb) - qGreen(rgb_2)): 0;
+            int blue = (qBlue(rgb) - qBlue(rgb_2) > 0)? (qBlue(rgb) - qBlue(rgb_2)): 0;
+            new_image.setPixel(i, j, qRgb(red, green, blue));
+        }
+    }
+
+    return new_image;
+}
+
+QImage Notepad::Dilation(QImage input_image)
+{
+    int width = input_image.width();
+    int height = input_image.height();
+    QImage new_image(width, height, QImage::Format_ARGB32);
+    int structure_element[9];
+    structure_element[0] = ui->structuringElement11->toPlainText().toInt();
+    structure_element[1] = ui->structuringElement12->toPlainText().toInt();
+    structure_element[2] = ui->structuringElement13->toPlainText().toInt();
+    structure_element[3] = ui->structuringElement21->toPlainText().toInt();
+    structure_element[4] = ui->structuringElement22->toPlainText().toInt();
+    structure_element[5] = ui->structuringElement23->toPlainText().toInt();
+    structure_element[6] = ui->structuringElement31->toPlainText().toInt();
+    structure_element[7] = ui->structuringElement32->toPlainText().toInt();
+    structure_element[8] = ui->structuringElement33->toPlainText().toInt();
+
+    int origin = ui->buttonGroup->checkedButton()->objectName().toStdString()[11] - '0';
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            new_image.setPixel(i, j, qRgb(0, 0, 0));
+        }
+    }
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            if(qRed(input_image.pixel(i, j)) == 255)
+            {
+                for(int x = (0 - ((origin - 1) % 3)); x < (3 - ((origin - 1) % 3)); x++)
+                {
+                    for(int y = (0 - ((origin - 1) / 3)); y < (3 - ((origin - 1) / 3)); y++)
+                    {
+                        if(structure_element[origin - 1 + x + 3*y] == 1)
+                        {
+                            new_image.setPixel(i + x, j + y, qRgb(255, 255, 255));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return new_image;
+}
+
+QImage Notepad::Erosion(QImage input_image)
+{
+    int width = input_image.width();
+    int height = input_image.height();
+    QImage new_image(width, height, QImage::Format_ARGB32);
+    int structure_element[9];
+    structure_element[0] = ui->structuringElement11->toPlainText().toInt();
+    structure_element[1] = ui->structuringElement12->toPlainText().toInt();
+    structure_element[2] = ui->structuringElement13->toPlainText().toInt();
+    structure_element[3] = ui->structuringElement21->toPlainText().toInt();
+    structure_element[4] = ui->structuringElement22->toPlainText().toInt();
+    structure_element[5] = ui->structuringElement23->toPlainText().toInt();
+    structure_element[6] = ui->structuringElement31->toPlainText().toInt();
+    structure_element[7] = ui->structuringElement32->toPlainText().toInt();
+    structure_element[8] = ui->structuringElement33->toPlainText().toInt();
+
+    int origin = ui->buttonGroup->checkedButton()->objectName().toStdString()[11] - '0';
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            new_image.setPixel(i, j, qRgb(0, 0, 0));
+        }
+    }
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            int flag = 1;
+
+            for(int x = (0 - ((origin - 1) % 3)); x < (3 - ((origin - 1) % 3)); x++)
+            {
+                for(int y = (0 - ((origin - 1) / 3)); y < (3 - ((origin - 1) / 3)); y++)
+                {
+                    if((structure_element[origin - 1 + x + 3*y] == 1) && (qRed(input_image.pixel(i + x, j + y)) != 255))
+                    {
+                        flag = 0;
+                    }
+                }
+            }
+
+            if (flag == 1)
+            {
+                new_image.setPixel(i , j , qRgb(255, 255, 255));
+            }
+        }
+    }
+
+    return new_image;
+}
+
+QImage Notepad::Opening(QImage input_image)
+{
+    return Dilation(Erosion(input_image));
+}
+
+QImage Notepad::Complement(QImage input_image)
+{
+    int width = input_image.width();
+    int height = input_image.height();
+    QImage new_image(width, height, QImage::Format_ARGB32);
+
+    QRgb * line;
+
+    for(int y = 0; y<height; y++){
+        line = (QRgb *)input_image.scanLine(y);
+
+        for(int x = 0; x<width; x++){
+            int gray = 255 - qRed(line[x]);
+            new_image.setPixel(x,y, qRgb(gray, gray, gray));
+        }
+    }
+
+    return new_image;
+}
+
+QImage Notepad::Intersection(QImage input_image_1, QImage input_image_2)
+{
+    int width = input_image_1.width();
+    int height = input_image_1.height();
+    QImage new_image(width, height, QImage::Format_ARGB32);
+
+    QRgb * line_1, * line_2;
+
+    for(int y = 0; y<height; y++){
+        line_1 = (QRgb *)input_image_1.scanLine(y);
+        line_2 = (QRgb *)input_image_2.scanLine(y);
+
+        for(int x = 0; x<width; x++){
+            if (qRed(line_1[x]) == 255 && qRed(line_2[x]) == 255)
+            {
+                new_image.setPixel(x,y, qRgb(255, 255, 255));
+            }else
+            {
+                new_image.setPixel(x,y, qRgb(0, 0, 0));
+            }
+
+        }
+    }
+
+    return new_image;
+}
+
+QImage Notepad::Union(QImage input_image_1, QImage input_image_2)
+{
+    int width = input_image_1.width();
+    int height = input_image_1.height();
+    QImage new_image(width, height, QImage::Format_ARGB32);
+
+    QRgb * line_1, * line_2;
+
+    for(int y = 0; y<height; y++){
+        line_1 = (QRgb *)input_image_1.scanLine(y);
+        line_2 = (QRgb *)input_image_2.scanLine(y);
+
+        for(int x = 0; x<width; x++){
+            if (qRed(line_1[x]) == 255 || qRed(line_2[x]) == 255)
+            {
+                new_image.setPixel(x,y, qRgb(255, 255, 255));
+            }else
+            {
+                new_image.setPixel(x,y, qRgb(0, 0, 0));
+            }
+
+        }
+    }
+
+    return new_image;
+}
+
+QImage Notepad::HitOrMiss(QImage input_image)
+{
+    int width = input_image.width();
+    int height = input_image.height();
+    QImage new_image(width, height, QImage::Format_ARGB32);
+    int structure_element[9];
+    if(ui->structuringElement11->toPlainText().isEmpty())
+    {
+        structure_element[0] = -1;
+    }else
+    {
+        structure_element[0] = ui->structuringElement11->toPlainText().toInt();
+    }
+
+    if(ui->structuringElement12->toPlainText().isEmpty())
+    {
+        structure_element[1] = -1;
+    }else
+    {
+        structure_element[1] = ui->structuringElement12->toPlainText().toInt();
+    }
+
+    if(ui->structuringElement13->toPlainText().isEmpty())
+    {
+        structure_element[2] = -1;
+    }else
+    {
+        structure_element[2] = ui->structuringElement13->toPlainText().toInt();
+    }
+
+    if(ui->structuringElement21->toPlainText().isEmpty())
+    {
+        structure_element[3] = -1;
+    }else
+    {
+        structure_element[3] = ui->structuringElement21->toPlainText().toInt();
+    }
+
+    if(ui->structuringElement22->toPlainText().isEmpty())
+    {
+        structure_element[4] = -1;
+    }else
+    {
+        structure_element[4] = ui->structuringElement22->toPlainText().toInt();
+    }
+
+    if(ui->structuringElement23->toPlainText().isEmpty())
+    {
+        structure_element[5] = -1;
+    }else
+    {
+        structure_element[5] = ui->structuringElement23->toPlainText().toInt();
+    }
+
+    if(ui->structuringElement31->toPlainText().isEmpty())
+    {
+        structure_element[6] = -1;
+    }else
+    {
+        structure_element[6] = ui->structuringElement31->toPlainText().toInt();
+    }
+
+    if(ui->structuringElement32->toPlainText().isEmpty())
+    {
+        structure_element[7] = -1;
+    }else
+    {
+        structure_element[7] = ui->structuringElement32->toPlainText().toInt();
+    }
+
+    if(ui->structuringElement33->toPlainText().isEmpty())
+    {
+        structure_element[8] = -1;
+    }else
+    {
+        structure_element[8] = ui->structuringElement33->toPlainText().toInt();
+    }
+
+    int origin = ui->buttonGroup->checkedButton()->objectName().toStdString()[11] - '0';
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            int flag = 1;
+
+            for(int x = (0 - ((origin - 1) % 3)); x < (3 - ((origin - 1) % 3)); x++)
+            {
+                for(int y = (0 - ((origin - 1) / 3)); y < (3 - ((origin - 1) / 3)); y++)
+                {
+                    if((structure_element[origin - 1 + x + 3*y] != -1) && (structure_element[origin - 1 + x + 3*y] != (qRed(input_image.pixel(i + x, j + y)) / 255)))
+                    {
+                        flag = 0;
+                    }
+                }
+            }
+
+            if (flag == 1)
+            {
+                new_image.setPixel(i , j , qRgb(255, 255, 255));
+            } else
+            {
+                new_image.setPixel(i , j , qRgb(0, 0, 0));
+            }
+        }
+    }
+
+    return new_image;
+}
+
+QImage Notepad::GrayDilation(QImage input_image)
+{
+    int width = input_image.width();
+    int height = input_image.height();
+    QImage new_image(width, height, QImage::Format_ARGB32);
+    int structure_element[9];
+    structure_element[0] = ui->structuringElement11->toPlainText().toInt();
+    structure_element[1] = ui->structuringElement12->toPlainText().toInt();
+    structure_element[2] = ui->structuringElement13->toPlainText().toInt();
+    structure_element[3] = ui->structuringElement21->toPlainText().toInt();
+    structure_element[4] = ui->structuringElement22->toPlainText().toInt();
+    structure_element[5] = ui->structuringElement23->toPlainText().toInt();
+    structure_element[6] = ui->structuringElement31->toPlainText().toInt();
+    structure_element[7] = ui->structuringElement32->toPlainText().toInt();
+    structure_element[8] = ui->structuringElement33->toPlainText().toInt();
+
+    int origin = ui->buttonGroup->checkedButton()->objectName().toStdString()[11] - '0';
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            new_image.setPixel(i, j, qRgb(0, 0, 0));
+        }
+    }
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            int max = 0;
+
+            for(int x = (0 - ((origin - 1) % 3)); x < (3 - ((origin - 1) % 3)); x++)
+            {
+                for(int y = (0 - ((origin - 1) / 3)); y < (3 - ((origin - 1) / 3)); y++)
+                {
+                    if(structure_element[origin - 1 + x + 3*y] == 1 && qRed(input_image.pixel(i + x, j + y)) > max)
+                    {
+                        max = qRed(input_image.pixel(i + x, j + y));
+                    }
+                }
+            }
+
+            new_image.setPixel(i, j, qRgb(max, max, max));
+        }
+    }
+
+    return new_image;
+}
+
 void Notepad::mouseMoveEvent(QMouseEvent *event)
 {
     QPoint p = imageLabel->mapFromGlobal(QCursor::pos());
@@ -113,6 +478,126 @@ void Notepad::changeMax(int value)
         }
 
     }
+    *processed_image = *newImage;
+    imageLabel->setPixmap(QPixmap::fromImage(*processed_image));
+    delete newImage;
+}
+
+void Notepad::changeLevelMin(int value)
+{
+    min = value;
+    int a = min;
+    int b = max;
+    int c = 0;
+    int d = 255;
+
+    int size = 256;
+
+    int red_min = 0, red_max = 255, green_min = 0, green_max = 255, blue_min = 0, blue_max= 255;
+
+    QImage * newImage = new QImage(image->width(), image->height(), QImage::Format_ARGB32);
+
+    QRgb * line;
+
+    for(int y = 0; y<image->height(); y++){
+        line = (QRgb *)image->scanLine(y);
+
+        for(int x = 0; x<image->width(); x++){
+            int red0 = qRed(line[x]), green0 = qGreen(line[x]), blue0 = qBlue(line[x]);
+            int red, green, blue;
+
+            if(red0 >= red_min && red0 < a)
+            {
+                red = c*(red0 - red_min)/(a - red_min);
+            } else if (red0 >= a && red0 < b) {
+                red = (d - c)*(red0 - a)/(b - a) + c;
+            } else {
+                red = (255 - d)*(red0 - b)/(red_max - b) + d;
+            }
+
+            if(green0 >= green_min && green0 < a)
+            {
+                green = c*(green0 - green_min)/(a - green_min);
+            } else if (green0 >= a && green0 < b) {
+                green = (d - c)*(green0 - a)/(b - a) + c;
+            } else {
+                green = (255 - d)*(green0 - b)/(green_max - b) + d;
+            }
+
+            if(blue0 >= blue_min && blue0 < a)
+            {
+                blue = c*(blue0 - blue_min)/(a - blue_min);
+            } else if (blue0 >= a && blue0 < b) {
+                blue = (d - c)*(blue0 - a)/(b - a) + c;
+            } else {
+                blue = (255 - d)*(blue0 - b)/(blue_max - b) + d;
+            }
+
+            newImage->setPixel(x,y, qRgb(red, green, blue));
+        }
+
+    }
+
+    *processed_image = *newImage;
+    imageLabel->setPixmap(QPixmap::fromImage(*processed_image));
+    delete newImage;
+}
+
+void Notepad::changeLevelMax(int value)
+{
+    max = value;
+    int a = min;
+    int b = max;
+    int c = 0;
+    int d = 255;
+
+    int size = 256;
+
+    int red_min = 0, red_max = 255, green_min = 0, green_max = 255, blue_min = 0, blue_max= 255;
+
+    QImage * newImage = new QImage(image->width(), image->height(), QImage::Format_ARGB32);
+
+    QRgb * line;
+
+    for(int y = 0; y<image->height(); y++){
+        line = (QRgb *)image->scanLine(y);
+
+        for(int x = 0; x<image->width(); x++){
+            int red0 = qRed(line[x]), green0 = qGreen(line[x]), blue0 = qBlue(line[x]);
+            int red, green, blue;
+
+            if(red0 >= red_min && red0 < a)
+            {
+                red = c*(red0 - red_min)/(a - red_min);
+            } else if (red0 >= a && red0 < b) {
+                red = (d - c)*(red0 - a)/(b - a) + c;
+            } else {
+                red = (255 - d)*(red0 - b)/(red_max - b) + d;
+            }
+
+            if(green0 >= green_min && green0 < a)
+            {
+                green = c*(green0 - green_min)/(a - green_min);
+            } else if (green0 >= a && green0 < b) {
+                green = (d - c)*(green0 - a)/(b - a) + c;
+            } else {
+                green = (255 - d)*(green0 - b)/(green_max - b) + d;
+            }
+
+            if(blue0 >= blue_min && blue0 < a)
+            {
+                blue = c*(blue0 - blue_min)/(a - blue_min);
+            } else if (blue0 >= a && blue0 < b) {
+                blue = (d - c)*(blue0 - a)/(b - a) + c;
+            } else {
+                blue = (255 - d)*(blue0 - b)/(blue_max - b) + d;
+            }
+
+            newImage->setPixel(x,y, qRgb(red, green, blue));
+        }
+
+    }
+
     *processed_image = *newImage;
     imageLabel->setPixmap(QPixmap::fromImage(*processed_image));
     delete newImage;
@@ -299,6 +784,19 @@ void Notepad::on_actionBrightness_triggered()
     delete newImage;
 }
 
+void Notepad::on_actionLevel_triggered()
+{
+    QObject::disconnect(ui->threshold1, SIGNAL(sliderMoved(int)),
+                     this, SLOT(changeMin(int)));
+    QObject::disconnect(ui->threshold2, SIGNAL(sliderMoved(int)),
+                     this, SLOT(changeMax(int)));
+
+    QObject::connect(ui->threshold1, SIGNAL(sliderMoved(int)),
+                     this, SLOT(changeLevelMin(int)));
+    QObject::connect(ui->threshold2, SIGNAL(sliderMoved(int)),
+                     this, SLOT(changeLevelMax(int)));
+}
+
 void Notepad::on_actionOtsu_triggered()
 {
     QImage * newImage = new QImage(image->width(), image->height(), QImage::Format_ARGB32);
@@ -376,6 +874,11 @@ void Notepad::on_actionOtsu_triggered()
 
 void Notepad::on_actionDouble_Threshold_triggered()
 {
+    QObject::disconnect(ui->threshold1, SIGNAL(sliderMoved(int)),
+                     this, SLOT(changeLevelMin(int)));
+    QObject::disconnect(ui->threshold2, SIGNAL(sliderMoved(int)),
+                     this, SLOT(changeLevelMax(int)));
+
     QObject::connect(ui->threshold1, SIGNAL(sliderMoved(int)),
                      this, SLOT(changeMin(int)));
     QObject::connect(ui->threshold2, SIGNAL(sliderMoved(int)),
@@ -1333,3 +1836,368 @@ void Notepad::on_actionCanny_triggered()
     }
     delete angle;
 }
+
+void Notepad::on_actionDilation_triggered()
+{
+    int width = image->width();
+    int height = image->height();
+    QImage * newImage = new QImage(width, height, QImage::Format_ARGB32);
+    int structure_element[9];
+    structure_element[0] = ui->structuringElement11->toPlainText().toInt();
+    structure_element[1] = ui->structuringElement12->toPlainText().toInt();
+    structure_element[2] = ui->structuringElement13->toPlainText().toInt();
+    structure_element[3] = ui->structuringElement21->toPlainText().toInt();
+    structure_element[4] = ui->structuringElement22->toPlainText().toInt();
+    structure_element[5] = ui->structuringElement23->toPlainText().toInt();
+    structure_element[6] = ui->structuringElement31->toPlainText().toInt();
+    structure_element[7] = ui->structuringElement32->toPlainText().toInt();
+    structure_element[8] = ui->structuringElement33->toPlainText().toInt();
+
+    int origin = ui->buttonGroup->checkedButton()->objectName().toStdString()[11] - '0';
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            newImage->setPixel(i, j, qRgb(0, 0, 0));
+        }
+    }
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            if(qRed(image->pixel(i, j)) == 255)
+            {
+                for(int x = (0 - ((origin - 1) % 3)); x < (3 - ((origin - 1) % 3)); x++)
+                {
+                    for(int y = (0 - ((origin - 1) / 3)); y < (3 - ((origin - 1) / 3)); y++)
+                    {
+                        if(structure_element[origin - 1 + x + 3*y] == 1)
+                        {
+                            newImage->setPixel(i + x, j + y, qRgb(255, 255, 255));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    *image = *newImage;
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+    delete newImage;
+}
+
+void Notepad::on_actionErosion_triggered()
+{
+    int width = image->width();
+    int height = image->height();
+    QImage * newImage = new QImage(width, height, QImage::Format_ARGB32);
+    int structure_element[9];
+    structure_element[0] = ui->structuringElement11->toPlainText().toInt();
+    structure_element[1] = ui->structuringElement12->toPlainText().toInt();
+    structure_element[2] = ui->structuringElement13->toPlainText().toInt();
+    structure_element[3] = ui->structuringElement21->toPlainText().toInt();
+    structure_element[4] = ui->structuringElement22->toPlainText().toInt();
+    structure_element[5] = ui->structuringElement23->toPlainText().toInt();
+    structure_element[6] = ui->structuringElement31->toPlainText().toInt();
+    structure_element[7] = ui->structuringElement32->toPlainText().toInt();
+    structure_element[8] = ui->structuringElement33->toPlainText().toInt();
+
+    int origin = ui->buttonGroup->checkedButton()->objectName().toStdString()[11] - '0';
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            newImage->setPixel(i, j, qRgb(0, 0, 0));
+        }
+    }
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            int flag = 1;
+
+            for(int x = (0 - ((origin - 1) % 3)); x < (3 - ((origin - 1) % 3)); x++)
+            {
+                for(int y = (0 - ((origin - 1) / 3)); y < (3 - ((origin - 1) / 3)); y++)
+                {
+                    if((structure_element[origin - 1 + x + 3*y] == 1) && (qRed(image->pixel(i + x, j + y)) != 255))
+                    {
+                        flag = 0;
+                    }
+                }
+            }
+
+            if (flag == 1)
+            {
+                newImage->setPixel(i , j , qRgb(255, 255, 255));
+            }
+        }
+    }
+
+    *image = *newImage;
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+    delete newImage;
+}
+
+void Notepad::on_actionOpening_triggered()
+{
+    on_actionErosion_triggered();
+    on_actionDilation_triggered();
+}
+
+void Notepad::on_actionClosing_triggered()
+{
+    on_actionDilation_triggered();
+    on_actionErosion_triggered();
+}
+
+void Notepad::on_actionDistance_Transform_triggered()
+{
+    int width = image->width();
+    int height = image->height();
+
+    QImage before_image(width, height, QImage::Format_ARGB32);
+    QImage after_image(width, height, QImage::Format_ARGB32);
+    before_image = after_image = *image;
+
+    int ** distance = new int*[width];
+    for(int i = 0; i < width; i++)
+    {
+        distance[i] = new int[height];
+        for(int j = 0; j < height; j++)
+        {
+            distance[i][j] = 0;
+        }
+    }
+
+    int flag = 1;
+    int times = 1;
+
+    while(flag == 1)
+    {
+        flag = 0;
+
+        before_image = after_image;
+        after_image = Erosion(before_image);
+
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
+                if(qRed(before_image.pixel(i, j)) == 255 && qRed(after_image.pixel(i, j)) == 0)
+                {
+                    distance[i][j] = times;
+                }
+            }
+        }
+
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j < height; j++)
+            {
+                if(qRed(after_image.pixel(i, j)) == 255)
+                {
+                    flag = 1;
+                }
+            }
+        }
+
+        times++;
+        qDebug() << times;
+    }
+
+    for(int i = 0; i < width; i++)
+    {
+        for(int j = 0; j < height; j++)
+        {
+            int gray_level = distance[i][j];
+            image->setPixel(i, j, qRgb(gray_level, gray_level, gray_level));
+        }
+    }
+
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+
+    for(int i = 0; i < width; i++)
+    {
+        delete distance[i];
+    }
+    delete distance;
+}
+
+void Notepad::on_actionHit_or_Miss_triggered()
+{
+    *image = HitOrMiss(*image);
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+}
+
+void Notepad::on_actionThinning_triggered()
+{
+    *image = Intersection(*image, Complement(HitOrMiss(*image)));
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+}
+
+void Notepad::on_actionThickening_triggered()
+{
+    *image = Union(*image, HitOrMiss(*image));
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+}
+
+void Notepad::on_actionSkeleton_triggered()
+{
+    *image = Subtract(Erosion(*image), Opening(Erosion(*image)));
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+}
+
+void Notepad::on_actionReconstruction_triggered()
+{
+    int width = image->width();
+    int height = image->height();
+
+    QImage V(*image);
+    QImage M(width, height, QImage::Format_ARGB32);
+    QImage T(*image);
+    M = Opening(V);
+
+    while(!(T == M))
+    {
+        T = M;
+        M = Intersection(V, Dilation(M));
+    }
+
+    *image = T;
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+}
+
+void Notepad::on_actionDilation_2_triggered()
+{
+    int width = image->width();
+    int height = image->height();
+    QImage * newImage = new QImage(width, height, QImage::Format_ARGB32);
+    int structure_element[9];
+    structure_element[0] = ui->structuringElement11->toPlainText().toInt();
+    structure_element[1] = ui->structuringElement12->toPlainText().toInt();
+    structure_element[2] = ui->structuringElement13->toPlainText().toInt();
+    structure_element[3] = ui->structuringElement21->toPlainText().toInt();
+    structure_element[4] = ui->structuringElement22->toPlainText().toInt();
+    structure_element[5] = ui->structuringElement23->toPlainText().toInt();
+    structure_element[6] = ui->structuringElement31->toPlainText().toInt();
+    structure_element[7] = ui->structuringElement32->toPlainText().toInt();
+    structure_element[8] = ui->structuringElement33->toPlainText().toInt();
+
+    int origin = ui->buttonGroup->checkedButton()->objectName().toStdString()[11] - '0';
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            newImage->setPixel(i, j, qRgb(0, 0, 0));
+        }
+    }
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            int max = 0;
+
+            for(int x = (0 - ((origin - 1) % 3)); x < (3 - ((origin - 1) % 3)); x++)
+            {
+                for(int y = (0 - ((origin - 1) / 3)); y < (3 - ((origin - 1) / 3)); y++)
+                {
+                    if(structure_element[origin - 1 + x + 3*y] == 1 && qRed(image->pixel(i + x, j + y)) > max)
+                    {
+                        max = qRed(image->pixel(i + x, j + y));
+                    }
+                }
+            }
+
+            newImage->setPixel(i, j, qRgb(max, max, max));
+        }
+    }
+
+    *image = *newImage;
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+    delete newImage;
+}
+
+void Notepad::on_actionErosion_2_triggered()
+{
+    int width = image->width();
+    int height = image->height();
+    QImage * newImage = new QImage(width, height, QImage::Format_ARGB32);
+    int structure_element[9];
+    structure_element[0] = ui->structuringElement11->toPlainText().toInt();
+    structure_element[1] = ui->structuringElement12->toPlainText().toInt();
+    structure_element[2] = ui->structuringElement13->toPlainText().toInt();
+    structure_element[3] = ui->structuringElement21->toPlainText().toInt();
+    structure_element[4] = ui->structuringElement22->toPlainText().toInt();
+    structure_element[5] = ui->structuringElement23->toPlainText().toInt();
+    structure_element[6] = ui->structuringElement31->toPlainText().toInt();
+    structure_element[7] = ui->structuringElement32->toPlainText().toInt();
+    structure_element[8] = ui->structuringElement33->toPlainText().toInt();
+
+    int origin = ui->buttonGroup->checkedButton()->objectName().toStdString()[11] - '0';
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            newImage->setPixel(i, j, qRgb(0, 0, 0));
+        }
+    }
+
+    for(int i = 0; i<width; i++)
+    {
+        for(int j = 0; j<height; j++)
+        {
+            int min = 255;
+
+            for(int x = (0 - ((origin - 1) % 3)); x < (3 - ((origin - 1) % 3)); x++)
+            {
+                for(int y = (0 - ((origin - 1) / 3)); y < (3 - ((origin - 1) / 3)); y++)
+                {
+                    if(structure_element[origin - 1 + x + 3*y] == 1 && qRed(image->pixel(i + x, j + y)) < min)
+                    {
+                        min = qRed(image->pixel(i + x, j + y));
+                    }
+                }
+            }
+
+            newImage->setPixel(i, j, qRgb(min, min, min));
+        }
+    }
+
+    *image = *newImage;
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+    delete newImage;
+}
+
+void Notepad::on_actionOpening_2_triggered()
+{
+    on_actionErosion_2_triggered();
+    on_actionDilation_2_triggered();
+}
+
+void Notepad::on_actionClosing_2_triggered()
+{
+    on_actionDilation_2_triggered();
+    on_actionErosion_2_triggered();
+}
+
+void Notepad::on_actionReconstruction_2_triggered()
+{
+    int i = 0;
+    while(i < 10)
+    {
+        *image = GrayDilation(*image);
+        i++;
+    }
+
+    imageLabel->setPixmap(QPixmap::fromImage(*image));
+}
+
+
